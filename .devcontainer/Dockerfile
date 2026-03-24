@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     procps \
     sudo \
+    locales \
     ca-certificates \
     fzf \
     zsh \
@@ -19,7 +20,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     nano \
     vim \
+    python3 \
+    python3-pip \
+    python3-venv \
+    pipx \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Generate UTF-8 locale so shells don't warn when LC_ALL is inherited.
+RUN sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen \
+    && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LANGUAGE=en_US:en
 
 
 # --- Dyalog APL (v20) ---
@@ -37,6 +51,21 @@ RUN set -eux; \
     rm -f "/tmp/${dyalog_deb}"; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
+
+# Install Go
+ARG GO_VERSION=1.24.1
+RUN set -eux; \
+    arch="$(dpkg --print-architecture)"; \
+    case "$arch" in \
+    arm64) goarch="arm64" ;; \
+    amd64) goarch="amd64" ;; \
+    *) echo "Unsupported architecture: $arch" >&2; exit 1 ;; \
+    esac; \
+    wget -O /tmp/go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-${goarch}.tar.gz"; \
+    tar -C /usr/local -xzf /tmp/go.tar.gz; \
+    rm /tmp/go.tar.gz
+
+ENV PATH=$PATH:/usr/local/go/bin
 
 # Install .NET SDK
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
@@ -73,11 +102,25 @@ RUN ARCH=$(dpkg --print-architecture) && \
     sudo dpkg -i "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
     rm "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb"
 
+# Build docsearch and bundle-docs (Dyalog documentation search)
+RUN git clone --depth=1 https://github.com/xpqz/bundle-docs.git /tmp/bundle-docs \
+    && cd /tmp/bundle-docs \
+    && CGO_ENABLED=1 go build -tags "fts5" -o /usr/local/bin/bundle-docs . \
+    && CGO_ENABLED=1 go build -tags "fts5" -o /usr/local/bin/docsearch ./cmd/docsearch \
+    && rm -rf /tmp/bundle-docs /root/go
+
+# Download pre-built Dyalog documentation database
+RUN mkdir -p /home/node/.bundle-docs \
+    && wget -O /home/node/.bundle-docs/dyalog-docs.db \
+       https://github.com/xpqz/bundle-docs/releases/download/v1.0.0/dyalog-docs.db \
+    && chown -R node:node /home/node/.bundle-docs
+
 # Set up non-root user
 USER node
 
 ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
-ENV PATH=$PATH:/usr/local/share/npm-global/bin:/home/node/.local/bin
+ENV GOPATH=/home/node/go
+ENV PATH=$PATH:/usr/local/share/npm-global/bin:/home/node/.local/bin:/home/node/go/bin
 ENV SHELL=/bin/zsh
 ENV EDITOR=nano
 ENV VISUAL=nano

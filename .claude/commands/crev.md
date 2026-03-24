@@ -40,9 +40,9 @@ Examine the implementation for:
 Execute the following checks, unless we're reviewing tests prior to implementation:
 
 ```bash
-dotnet test                          # Full test suite
-dotnet format --verify-no-changes    # Formatting
-dotnet build -warnaserror            # Compiler and analyser checks
+dotnet test                                  # Full test suite
+dotnet format --verify-no-changes            # Formatting
+dotnet build -warnaserror                    # Build and lint checks
 ```
 
 Note:

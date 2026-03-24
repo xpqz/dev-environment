@@ -1,4 +1,4 @@
-# /make-issues - Convert a plan document to actionable skis issues
+# /make-issues - Convert a plan document to actionable issues
 
 Carefully examine the plan document given in $ARGUMENTS (e.g., "abc" assumed to live under "docs/plans" and have a ".md" extension if not given).
 

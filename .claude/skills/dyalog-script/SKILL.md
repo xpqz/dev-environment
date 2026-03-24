@@ -7,34 +7,57 @@ description: This Skill executes APL code via the `dyalogscript` interpreter.
 
 ## Instructions
 
-`dyalogscript` is an interpreter that can execute a textfile containing APL code from the commandline, without relying on a full, running Dyalog session. `dyalogscript` is executed as follows:
+`dyalogscript` is an interpreter that can execute APL code from the commandline, without relying on a full, running Dyalog session.
+
+### Quick evaluation (preferred for short snippets)
+
+Pipe a one-liner via `echo`, or use a heredoc for a few lines:
+
+```bash
+# One-liner
+echo "⎕←(+⌿÷≢)⍳100" | dyalogscript /dev/stdin
+
+# Multi-line
+dyalogscript /dev/stdin <<'EAPL'
+⎕←(+⌿÷≢)⍳100
+⎕←'hello world'
+EAPL
+```
+
+### File-based execution (for longer scripts)
 
 ```bash
 /usr/bin/dyalogscript my_apl_program.apls
 ```
 
-Notes:
+When using files: give them unique names, ensure a trailing newline, and remove ephemeral scripts after evaluation.
 
-1. You MUST store your code in a file; you cannot feed programs as strings or via stdin.
-2. Do remove ephemeral test scripts following evaluation.
-3. Unlike the normal Dyalog session, you MUST use "quad-gets" (`⎕ ← ...`) to dump values to `stdout`.
-4. **CRUCIAL**: your script files MUST have a trailing newline!
-5. Always use the full path to `/usr/bin/dyalogscript`.
-6. Ensure that your temporary script files have unique names.
+## Notes
+
+1. You MUST use `⎕←` to print values to `stdout` — bare expressions produce no output.
+2. Use `⋄` to separate multiple statements on a single line when piping via `echo`.
 
 ## Examples
 
 User: Evaluate `(+⌿÷≢)⍳100` as Dyalog APL
 
-Claude creates the file `eval-xyz.apls` with the content:
-
-```apl
-⎕←(+⌿÷≢)⍳100 ⍝ Note ⎕← to print to stdout, and traling newline
-
+```bash
+$ echo "⎕←(+⌿÷≢)⍳100" | dyalogscript /dev/stdin
+50.5
 ```
 
-Claude executes `/usr/bin/dyalogscript eval-xyz.apls`:
+User: Show me strand assignment with depths
 
 ```bash
-50.5
+$ dyalogscript /dev/stdin <<'EAPL'
+x y←'hello' (1 2 3)
+⎕←x
+⎕←y
+⎕←≡x
+⎕←≡y
+EAPL
+hello
+1 2 3
+1
+1
 ```

@@ -1,5 +1,5 @@
 {
-  "name": "Claude Dev Environment (Node + C# + Dyalog)",
+  "name": "Claude Dev Environment (Node + C# + Go + Python + Dyalog)",
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
@@ -14,7 +14,9 @@
         "anthropic.claude-code",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "golang.go",
+        "ms-python.python"
       ],
       "settings": {
         "editor.formatOnSave": true,
@@ -40,6 +42,9 @@
     "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
     "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
   ],
+  "remoteEnv": {
+    "GH_TOKEN": "${localEnv:GH_TOKEN}"
+  },
   "containerEnv": {
     "NODE_OPTIONS": "--max-old-space-size=4096",
     "CLAUDE_CONFIG_DIR": "/home/node/.claude",
