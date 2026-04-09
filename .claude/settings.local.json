@@ -21,7 +21,7 @@
   },
   "statusLine": {
     "type": "command",
-    "/workspace/.claude/statusline.sh"
+    "command": "/workspace/.claude/statusline.sh"
   },
   "spinnerTipsEnabled": false,
   "plansDirectory": "docs/plans",
