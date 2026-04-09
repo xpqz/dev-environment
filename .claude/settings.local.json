@@ -4,7 +4,6 @@
     "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1"
   },
   "includeCoAuthoredBy": false,
-  "showThinkingSummaries": true,
   "permissions": {
     "allow": [
       "WebSearch",
@@ -16,14 +15,16 @@
       "Bash(python3 switch-toolchain.py python)",
       "Bash(gh api:*)",
       "Bash(docker info:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(git:*)"
     ]
   },
   "statusLine": {
     "type": "command",
-    "command": ".claude/statusline.sh"
+    "/workspace/.claude/statusline.sh"
   },
-  "plansDirectory": "docs/plans",
   "spinnerTipsEnabled": false,
-  "prefersReducedMotion": true
+  "plansDirectory": "docs/plans",
+  "prefersReducedMotion": true,
+  "showThinkingSummaries": true
 }

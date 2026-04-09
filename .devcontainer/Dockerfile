@@ -120,10 +120,16 @@ USER node
 
 ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
 ENV GOPATH=/home/node/go
-ENV PATH=$PATH:/usr/local/share/npm-global/bin:/home/node/.local/bin:/home/node/go/bin
+ENV PATH=$PATH:/usr/local/share/npm-global/bin:/home/node/.local/bin:/home/node/go/bin:/home/node/.dotnet/tools
 ENV SHELL=/bin/zsh
 ENV EDITOR=nano
 ENV VISUAL=nano
+
+# Install LSP servers for each supported toolchain
+RUN go install golang.org/x/tools/gopls@latest
+RUN dotnet tool install --global csharp-ls
+RUN npm install -g typescript typescript-language-server
+RUN pipx install python-lsp-server
 
 ARG ZSH_IN_DOCKER_VERSION=1.2.0
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v${ZSH_IN_DOCKER_VERSION}/zsh-in-docker.sh)" -- \
