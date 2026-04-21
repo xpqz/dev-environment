@@ -67,10 +67,11 @@ RUN set -eux; \
 
 ENV PATH=$PATH:/usr/local/go/bin
 
-# Install .NET SDK
+# Install .NET SDK (8.0 for Dyalog v20 compatibility, 10.0 as primary)
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
     && chmod +x dotnet-install.sh \
     && ./dotnet-install.sh --channel 8.0 --install-dir /usr/local/dotnet \
+    && ./dotnet-install.sh --channel 10.0 --install-dir /usr/local/dotnet \
     && rm dotnet-install.sh
 
 ENV DOTNET_ROOT=/usr/local/dotnet
