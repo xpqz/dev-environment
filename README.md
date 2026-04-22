@@ -1,6 +1,6 @@
 # Dev Environment
 
-A VS Code devcontainer with Node.js, C# (.NET 8), Go, Python, Dyalog APL, and Claude Code pre-installed.
+A VS Code devcontainer with Node.js, C# (.NET 8 & 10), Go, Python, Dyalog APL, and Claude Code pre-installed.
 
 ## What's included
 
@@ -9,7 +9,7 @@ A VS Code devcontainer with Node.js, C# (.NET 8), Go, Python, Dyalog APL, and Cl
 | Toolchain | Version | Notes |
 |-----------|---------|-------|
 | Node.js | 20 | Base image; npm globals via `/usr/local/share/npm-global` |
-| .NET SDK | 8.0 | Installed to `/usr/local/dotnet` |
+| .NET SDK | 8.0, 10.0 | Installed to `/usr/local/dotnet` |
 | Go | 1.24.1 | `GOPATH` set to `~/go`, binaries on `PATH` |
 | Python 3 | System (Debian) | Includes `pip`, `venv`, and `pipx` |
 | Dyalog APL | 20.0 | Unicode build, arm64 and amd64 |
