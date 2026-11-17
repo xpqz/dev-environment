@@ -1,5 +1,9 @@
 # Dev Environment
 
+> [!NOTE]
+> Don't use this. Instead, go to https://github.com/dyalog-labs/agent-dev-container
+>
+
 A VS Code devcontainer with Node.js, C# (.NET 8 & 10), Go, Python, Dyalog APL, and Claude Code pre-installed.
 
 ## What's included
